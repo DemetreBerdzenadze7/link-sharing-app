@@ -1,53 +1,37 @@
-type InputFieldProps = {
-  id: string;
-  label: string;
-  type: string;
-  icon: string;
-  placeholder: string;
-  error?: string;
-};
+import InputField from "../input-field/InputField";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
-const InputField = ({
-  id,
-  label,
-  type,
-  icon,
-  placeholder,
-  error,
-}: InputFieldProps) => {
-  return (
-    <div className="flex w-full flex-col gap-1">
-      <label
-        htmlFor={id}
-        className={`text-xs leading-normal ${error ? "text-red" : "text-dark-grey"}`}
-      >
-        {label}
-      </label>
-      <div
-        className={`flex w-full items-center gap-3 rounded-lg border bg-white px-4 py-3 ${
-          error
-            ? "border-red"
-            : "border-borders focus-within:border-purple focus-within:shadow-[0_0_32px_0_rgba(99,60,255,0.25)]"
-        }`}
-      >
-        <img src={icon} alt="" className="shrink-0" />
-        <input
-          id={id}
-          type={type}
-          placeholder={placeholder}
-          className="w-full min-w-0 bg-transparent text-base leading-normal text-dark-grey caret-purple outline-none placeholder:text-dark-grey/50"
-        />
-        {error && (
-          <span className="shrink-0 text-xs leading-normal text-red">
-            {error}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-};
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+const schema = yup
+  .object({
+    email: yup
+      .string()
+      .trim()
+      .required("Can't be empty")
+      .matches(EMAIL_REGEX, "Invalid email"),
+    password: yup
+      .string()
+      .required("Can't be empty")
+      .min(8, "At least 8 characters")
+      .matches(/[a-z]/, "Needs a lowercase letter")
+      .matches(/[A-Z]/, "Needs an uppercase letter")
+      .matches(/\d/, "Needs a number"),
+  })
+  .required();
 
 const Registration = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TInputs>({
+    resolver: yupResolver(schema),
+  });
+  const onSubmit: SubmitHandler<TInputs> = (data) => console.log(data);
+
   return (
     <div className="flex min-h-screen flex-col gap-16 bg-white p-8 md:items-center md:justify-center md:gap-12.75 md:bg-light-grey md:p-6">
       <img
@@ -66,13 +50,15 @@ const Registration = () => {
           </p>
         </div>
 
-        <form className="flex flex-col gap-6">
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
           <InputField
             id="email"
             label="Email address"
-            type="email"
+            type="text"
             icon="/images/icon-email.svg"
             placeholder="e.g. alex@email.com"
+            error={errors.email?.message}
+            {...register("email")}
           />
           <InputField
             id="password"
@@ -80,6 +66,8 @@ const Registration = () => {
             type="password"
             icon="/images/icon-password.svg"
             placeholder="Enter your password"
+            error={errors.password?.message}
+            {...register("password")}
           />
 
           <button
