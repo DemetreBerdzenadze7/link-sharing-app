@@ -15,8 +15,6 @@ const password = yup
   .matches(/[A-Z]/, "Needs an uppercase letter")
   .matches(/\d/, "Needs a number");
 
-export const loginSchema = yup.object({ email, password }).required();
-
 export const createAccountSchema = yup
   .object({
     email,

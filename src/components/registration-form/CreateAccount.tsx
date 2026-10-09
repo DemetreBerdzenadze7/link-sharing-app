@@ -3,8 +3,10 @@ import { Link, useNavigate } from "react-router";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createAccountSchema } from "../../schemas/auth";
+import { useAccount } from "../../context/Accounts";
 
 const CreateAccount = () => {
+  const { addAccount } = useAccount();
   const navigate = useNavigate();
   const {
     register,
@@ -13,8 +15,14 @@ const CreateAccount = () => {
   } = useForm<TCreateAccountInputs>({
     resolver: yupResolver(createAccountSchema),
   });
-  const onSubmit: SubmitHandler<TCreateAccountInputs> = async () => {
+  const onSubmit: SubmitHandler<TCreateAccountInputs> = async (data) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    addAccount({
+      email: data.email,
+      password: data.password,
+    });
+
     navigate("/login", { state: { accountCreated: true } });
   };
 

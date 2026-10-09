@@ -1,32 +1,32 @@
-import { useEffect, useState } from "react";
 import InputField from "../input-field/InputField";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Link, useLocation, useNavigate } from "react-router";
-import { loginSchema } from "../../schemas/auth";
+import { Link } from "react-router";
+import { useNavigate } from "react-router";
+import { useAccount } from "../../context/Accounts";
 
 const Login = () => {
+  const { accounts, login } = useAccount();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [showToast, setShowToast] = useState(
-    Boolean(location.state?.accountCreated),
-  );
-
-  useEffect(() => {
-    if (!showToast) return;
-    // clear the state so the toast doesn't come back on page refresh
-    navigate(location.pathname, { replace: true, state: null });
-    const timer = setTimeout(() => setShowToast(false), 4000);
-    return () => clearTimeout(timer);
-  }, [showToast, navigate, location.pathname]);
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-  } = useForm<TInputs>({
-    resolver: yupResolver(loginSchema),
-  });
-  const onSubmit: SubmitHandler<TInputs> = () => {
+  } = useForm<TInputs>();
+  const onSubmit: SubmitHandler<TInputs> = (data) => {
+    const account = accounts.find((account) => account.email === data.email);
+    if (!account) {
+      setError("email", { message: "Account not found" });
+      return;
+    }
+
+    if (data.password !== account.password) {
+      console.log(account);
+      setError("password", { message: "Wrong password" });
+      return;
+    }
+
+    login(account.email);
     navigate("/home");
   };
 
@@ -83,15 +83,6 @@ const Login = () => {
           </p>
         </form>
       </div>
-
-      {showToast && (
-        <div
-          role="status"
-          className="fixed bottom-10 left-1/2 w-[calc(100%-32px)] max-w-max -translate-x-1/2 rounded-xl bg-dark-grey px-6 py-4 text-center text-base leading-normal font-semibold text-light-grey shadow-[0_0_32px_0_rgba(0,0,0,0.1)]"
-        >
-          Your account has been created! Please log in.
-        </div>
-      )}
     </div>
   );
 };

@@ -8,6 +8,7 @@ import CreateAccount from "./pages/CreateAccount";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
 import ProfileDetails from "./pages/ProfileDetails";
+import { AccountProvider } from "./context/Accounts";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AccountProvider>
+      <RouterProvider router={router} />
+    </AccountProvider>
   </StrictMode>,
 );

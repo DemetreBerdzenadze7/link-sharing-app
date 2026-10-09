@@ -1,20 +1,11 @@
-import { useState } from "react";
 import LinkCard from "../components/link-card/LinkCard";
 import EmptyLinks from "../components/empty-links/EmptyLinks";
 import PhonePreview from "../components/phone-preview/PhonePreview";
+import { useAccount } from "../context/Accounts";
 
 const Home = () => {
-  const [links, setLinks] = useState<ILink[]>([]);
-
-  const addLink = () => {
-    setLinks((prev) => [...prev, { id: Date.now(), platform: "GitHub" }]);
-  };
-
-  const changePlatform = (id: number, platform: string) => {
-    setLinks((prev) =>
-      prev.map((link) => (link.id === id ? { ...link, platform } : link)),
-    );
-  };
+  const { currentAccount, addLink } = useAccount();
+  const links = currentAccount?.links ?? [];
 
   return (
     <div className="flex w-full gap-6">
@@ -27,15 +18,15 @@ const Home = () => {
               Customize your links
             </h1>
             <p className="text-base text-grey">
-              Add/edit/remove links below and then share all your profiles
-              with the world!
+              Add/edit/remove links below and then share all your profiles with
+              the world!
             </p>
           </div>
 
           <div className="flex flex-1 flex-col gap-6">
             <button
               type="button"
-              onClick={addLink}
+              onClick={() => currentAccount && addLink(currentAccount.email)}
               className="w-full cursor-pointer rounded-lg border border-purple px-6.75 py-2.75 text-base leading-normal font-semibold text-purple hover:bg-light-purple"
             >
               + Add new link
@@ -46,12 +37,11 @@ const Home = () => {
             ) : (
               links.map((link, index) => (
                 <LinkCard
-                  key={link.id}
-                  number={index + 1}
+                  key={index}
+                  index={index}
+                  email={currentAccount!.email}
                   platform={link.platform}
-                  onPlatformChange={(platform) =>
-                    changePlatform(link.id, platform)
-                  }
+                  url={link.link}
                 />
               ))
             )}

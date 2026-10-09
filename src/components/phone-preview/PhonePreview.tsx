@@ -1,7 +1,7 @@
 import PreviewLink from "../preview-link/PreviewLink";
 
 interface PhonePreviewProps {
-  links?: ILink[];
+  links?: IAccountLink[];
   image?: string | null;
   name?: string;
   email?: string;
@@ -43,8 +43,8 @@ const PhonePreview = ({
             hasProfile ? "top-74" : "top-69.25"
           }`}
         >
-          {links.map((link) => (
-            <PreviewLink key={link.id} platform={link.platform} />
+          {links.map((link, index) => (
+            <PreviewLink key={index} platform={link.platform} />
           ))}
         </ul>
       </div>

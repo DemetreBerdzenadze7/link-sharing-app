@@ -30,3 +30,17 @@ interface IProfileInputs {
 }
 
 type TProfileInputs = IProfileInputs;
+
+interface IAccountLink {
+  platform: string;
+  link: string;
+}
+
+interface User {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  profilePicture: string;
+  links: IAccountLink[];
+}

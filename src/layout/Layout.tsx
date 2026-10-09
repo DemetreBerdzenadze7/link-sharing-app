@@ -1,7 +1,14 @@
-import { Outlet } from "react-router";
+import { Navigate, Outlet } from "react-router";
 import Header from "../components/header/Header";
+import { useAccount } from "../context/Accounts";
 
 const Layout = () => {
+  const { currentAccount } = useAccount();
+
+  if (!currentAccount) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <div className="bg-light-grey">
       <div className="mx-auto flex min-h-screen w-full max-w-360 flex-col md:gap-6 md:p-6">

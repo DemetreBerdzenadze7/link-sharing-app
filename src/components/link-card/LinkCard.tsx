@@ -2,14 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import InputField from "../input-field/InputField";
 import PlatformIcon from "../platform-icon/PlatformIcon";
 import { PLATFORMS, getPlatform } from "../../constants/platforms";
+import { useAccount } from "../../context/Accounts";
 
 interface LinkCardProps {
-  number: number;
+  index: number;
+  email: string;
   platform: string;
-  onPlatformChange: (platform: string) => void;
+  url: string;
 }
 
-const LinkCard = ({ number, platform, onPlatformChange }: LinkCardProps) => {
+const LinkCard = ({ index, email, platform, url }: LinkCardProps) => {
+  const { updateLink } = useAccount();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const selected = getPlatform(platform);
@@ -25,7 +28,7 @@ const LinkCard = ({ number, platform, onPlatformChange }: LinkCardProps) => {
   }, [isOpen]);
 
   const selectPlatform = (name: string) => {
-    onPlatformChange(name);
+    updateLink(email, index, name, url);
     setIsOpen(false);
   };
 
@@ -35,7 +38,7 @@ const LinkCard = ({ number, platform, onPlatformChange }: LinkCardProps) => {
         <div className="flex items-center gap-2">
           <img src="/images/icon-drag-and-drop.svg" alt="" />
           <span className="text-base leading-normal font-bold text-grey">
-            Link #{number}
+            Link #{index + 1}
           </span>
         </div>
         <button
@@ -97,11 +100,13 @@ const LinkCard = ({ number, platform, onPlatformChange }: LinkCardProps) => {
       </div>
 
       <InputField
-        id={`link-${number}`}
+        id={`link-${index}`}
         label="Link"
         type="text"
         icon="/images/icon-link.svg"
         placeholder={selected.placeholder}
+        value={url}
+        onChange={(e) => updateLink(email, index, platform, e.target.value)}
       />
     </div>
   );
