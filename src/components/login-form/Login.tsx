@@ -21,7 +21,6 @@ const Login = () => {
     }
 
     if (data.password !== account.password) {
-      console.log(account);
       setError("password", { message: "Wrong password" });
       return;
     }
