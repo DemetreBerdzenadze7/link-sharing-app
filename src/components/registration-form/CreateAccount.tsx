@@ -2,38 +2,15 @@ import InputField from "../input-field/InputField";
 import { Link } from "react-router";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { createAccountSchema } from "../../schemas/auth";
 
 const CreateAccount = () => {
-  const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-  const schema = yup
-    .object({
-      email: yup
-        .string()
-        .trim()
-        .required("Can't be empty")
-        .matches(EMAIL_REGEX, "Invalid email"),
-      password: yup
-        .string()
-        .required("Can't be empty")
-        .min(8, "At least 8 characters")
-        .matches(/[a-z]/, "Needs a lowercase letter")
-        .matches(/[A-Z]/, "Needs an uppercase letter")
-        .matches(/\d/, "Needs a number"),
-      confirmPassword: yup
-        .string()
-        .defined()
-        .oneOf([yup.ref("password")], "Please check again"),
-    })
-    .required();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<TCreateAccountInputs>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(createAccountSchema),
   });
   const onSubmit: SubmitHandler<TCreateAccountInputs> = (data) =>
     console.log(data);

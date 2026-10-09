@@ -1,27 +1,8 @@
 import InputField from "../input-field/InputField";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { Link } from "react-router";
-
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-const schema = yup
-  .object({
-    email: yup
-      .string()
-      .trim()
-      .required("Can't be empty")
-      .matches(EMAIL_REGEX, "Invalid email"),
-    password: yup
-      .string()
-      .required("Can't be empty")
-      .min(8, "At least 8 characters")
-      .matches(/[a-z]/, "Needs a lowercase letter")
-      .matches(/[A-Z]/, "Needs an uppercase letter")
-      .matches(/\d/, "Needs a number"),
-  })
-  .required();
+import { loginSchema } from "../../schemas/auth";
 
 const Login = () => {
   const {
@@ -29,7 +10,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<TInputs>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(loginSchema),
   });
   const onSubmit: SubmitHandler<TInputs> = (data) => console.log(data);
 
