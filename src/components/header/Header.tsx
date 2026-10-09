@@ -1,3 +1,10 @@
+import { NavLink } from "react-router";
+
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  `flex items-center gap-2 rounded-lg px-6.75 py-2.75 text-base leading-normal font-semibold ${
+    isActive ? "bg-light-purple text-purple" : "text-grey hover:text-purple"
+  }`;
+
 const Header = () => {
   return (
     <header className="flex items-center justify-between bg-white py-4 pr-4 pl-6 md:rounded-xl md:p-4 md:pl-6">
@@ -13,20 +20,14 @@ const Header = () => {
       />
 
       <nav className="flex items-center md:gap-4">
-        <button
-          type="button"
-          className="flex cursor-pointer items-center gap-2 rounded-lg bg-light-purple px-6.75 py-2.75 text-base leading-normal font-semibold text-purple"
-        >
+        <NavLink to="/home" className={navLinkClass}>
           <span className="size-5 bg-current mask-[url(/images/icon-links-header.svg)] mask-contain mask-center mask-no-repeat" />
           <span className="hidden md:inline">Links</span>
-        </button>
-        <button
-          type="button"
-          className="flex cursor-pointer items-center gap-2 rounded-lg px-6.75 py-2.75 text-base leading-normal font-semibold text-grey hover:text-purple"
-        >
+        </NavLink>
+        <NavLink to="/profile-details" className={navLinkClass}>
           <span className="size-5 bg-current mask-[url(/images/icon-profile-details-header.svg)] mask-contain mask-center mask-no-repeat" />
           <span className="hidden md:inline">Profile Details</span>
-        </button>
+        </NavLink>
       </nav>
 
       <button

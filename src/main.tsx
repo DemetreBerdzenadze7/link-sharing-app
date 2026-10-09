@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import CreateAccount from "./pages/CreateAccount";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
+import ProfileDetails from "./pages/ProfileDetails";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/home",
         Component: Home,
+      },
+      {
+        path: "/profile-details",
+        Component: ProfileDetails,
       },
     ],
   },

@@ -1,9 +1,24 @@
+import { useState } from "react";
+import LinkCard from "../components/link-card/LinkCard";
+import EmptyLinks from "../components/empty-links/EmptyLinks";
+import PhonePreview from "../components/phone-preview/PhonePreview";
+
 const Home = () => {
+  const [links, setLinks] = useState<ILink[]>([]);
+
+  const addLink = () => {
+    setLinks((prev) => [...prev, { id: Date.now(), platform: "GitHub" }]);
+  };
+
+  const changePlatform = (id: number, platform: string) => {
+    setLinks((prev) =>
+      prev.map((link) => (link.id === id ? { ...link, platform } : link)),
+    );
+  };
+
   return (
     <div className="flex w-full gap-6">
-      <div className="hidden w-2/5 max-w-140 shrink-0 items-center justify-center rounded-xl bg-white p-6 lg:flex">
-        <img src="/images/illustration-phone-mockup.svg" alt="Phone preview" />
-      </div>
+      <PhonePreview links={links} />
 
       <div className="flex flex-1 flex-col rounded-xl bg-white">
         <div className="flex flex-1 flex-col gap-10 p-6 md:p-10">
@@ -20,36 +35,34 @@ const Home = () => {
           <div className="flex flex-1 flex-col gap-6">
             <button
               type="button"
+              onClick={addLink}
               className="w-full cursor-pointer rounded-lg border border-purple px-6.75 py-2.75 text-base leading-normal font-semibold text-purple hover:bg-light-purple"
             >
               + Add new link
             </button>
 
-            <div className="flex flex-1 flex-col items-center justify-center gap-6 rounded-xl bg-light-grey p-5 text-center md:gap-10 md:py-15.5">
-              <img
-                src="/images/illustration-empty.svg"
-                alt=""
-                className="w-31 md:w-auto"
-              />
-              <div className="flex max-w-122 flex-col gap-6 leading-normal">
-                <h2 className="text-2xl font-bold text-dark-grey md:text-[32px]">
-                  Let’s get you started
-                </h2>
-                <p className="text-base text-grey">
-                  Use the “Add new link” button to get started. Once you have
-                  more than one link, you can reorder and edit them. We’re here
-                  to help you share your profiles with everyone!
-                </p>
-              </div>
-            </div>
+            {links.length === 0 ? (
+              <EmptyLinks />
+            ) : (
+              links.map((link, index) => (
+                <LinkCard
+                  key={link.id}
+                  number={index + 1}
+                  platform={link.platform}
+                  onPlatformChange={(platform) =>
+                    changePlatform(link.id, platform)
+                  }
+                />
+              ))
+            )}
           </div>
         </div>
 
         <div className="flex justify-end border-t border-borders p-4 md:px-10 md:py-6">
           <button
             type="button"
-            disabled
-            className="w-full rounded-lg bg-purple px-6.75 py-2.75 text-base leading-normal font-semibold text-white opacity-25 md:w-auto"
+            disabled={links.length === 0}
+            className="w-full cursor-pointer rounded-lg bg-purple px-6.75 py-2.75 text-base leading-normal font-semibold text-white hover:bg-purple-hover hover:shadow-[0_0_32px_0_rgba(99,60,255,0.25)] disabled:cursor-default disabled:opacity-25 disabled:hover:bg-purple disabled:hover:shadow-none md:w-auto"
           >
             Save
           </button>

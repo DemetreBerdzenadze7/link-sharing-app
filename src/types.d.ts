@@ -10,3 +10,15 @@ interface ICreateAccountInputs extends IInputs {
 }
 
 type TCreateAccountInputs = ICreateAccountInputs;
+
+interface IPlatform {
+  name: string;
+  icon: string;
+  color: string;
+  placeholder: string;
+}
+
+interface ILink {
+  id: number;
+  platform: string;
+}
