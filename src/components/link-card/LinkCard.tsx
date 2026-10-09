@@ -1,18 +1,23 @@
 import { useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import InputField from "../input-field/InputField";
 import PlatformIcon from "../platform-icon/PlatformIcon";
 import { PLATFORMS, getPlatform } from "../../constants/platforms";
-import { useAccount } from "../../context/Accounts";
 
 interface LinkCardProps {
   index: number;
-  email: string;
-  platform: string;
-  url: string;
+  onRemove: () => void;
 }
 
-const LinkCard = ({ index, email, platform, url }: LinkCardProps) => {
-  const { updateLink } = useAccount();
+const LinkCard = ({ index, onRemove }: LinkCardProps) => {
+  const {
+    register,
+    watch,
+    setValue,
+    trigger,
+    formState: { errors, isSubmitted },
+  } = useFormContext<TLinksInputs>();
+  const platform = watch(`links.${index}.platform`);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const selected = getPlatform(platform);
@@ -28,7 +33,9 @@ const LinkCard = ({ index, email, platform, url }: LinkCardProps) => {
   }, [isOpen]);
 
   const selectPlatform = (name: string) => {
-    updateLink(email, index, name, url);
+    setValue(`links.${index}.platform`, name);
+    // the url is checked against the platform, so re-check it after a change
+    if (isSubmitted) trigger(`links.${index}.link`);
     setIsOpen(false);
   };
 
@@ -43,6 +50,7 @@ const LinkCard = ({ index, email, platform, url }: LinkCardProps) => {
         </div>
         <button
           type="button"
+          onClick={onRemove}
           className="cursor-pointer text-base leading-normal text-grey"
         >
           Remove
@@ -105,8 +113,8 @@ const LinkCard = ({ index, email, platform, url }: LinkCardProps) => {
         type="text"
         icon="/images/icon-link.svg"
         placeholder={selected.placeholder}
-        value={url}
-        onChange={(e) => updateLink(email, index, platform, e.target.value)}
+        error={errors.links?.[index]?.link?.message}
+        {...register(`links.${index}.link`)}
       />
     </div>
   );

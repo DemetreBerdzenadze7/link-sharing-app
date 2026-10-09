@@ -9,14 +9,16 @@ import {
 interface AccountContextType {
   accounts: User[];
   currentAccount: User | undefined;
+  canPreview: boolean;
   addAccount: (account: TInputs) => void;
   login: (email: string) => void;
-  addLink: (email: string) => void;
-  updateLink: (
+  saveLinks: (email: string, links: IAccountLink[]) => void;
+  updateProfileDetails: (
     email: string,
-    index: number,
-    platform: string,
-    url: string,
+    firstName: string,
+    lastName: string,
+    profileEmail: string,
+    profilePicture: string,
   ) => void;
 }
 
@@ -34,6 +36,15 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     (account) => account.email === currentEmail,
   );
 
+  // preview is only available once the profile and at least one link are saved
+  const canPreview = Boolean(
+    currentAccount &&
+    currentAccount.firstName &&
+    currentAccount.lastName &&
+    currentAccount.profilePicture &&
+    currentAccount.links.length > 0,
+  );
+
   const addAccount = (account: TInputs) => {
     setAccounts((prev) => [
       ...prev,
@@ -41,6 +52,7 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
         ...account,
         firstName: "",
         lastName: "",
+        profileEmail: "",
         profilePicture: "",
         links: [],
       },
@@ -52,34 +64,25 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("currentUser", email);
   };
 
-  const addLink = (email: string) => {
+  const saveLinks = (email: string, links: IAccountLink[]) => {
     setAccounts((prev) =>
       prev.map((account) =>
-        account.email === email
-          ? {
-              ...account,
-              links: [...account.links, { platform: "GitHub", link: "" }],
-            }
-          : account,
+        account.email === email ? { ...account, links } : account,
       ),
     );
   };
 
-  const updateLink = (
+  const updateProfileDetails = (
     email: string,
-    index: number,
-    platform: string,
-    url: string,
+    firstName: string,
+    lastName: string,
+    profileEmail: string,
+    profilePicture: string,
   ) => {
     setAccounts((prev) =>
       prev.map((account) =>
         account.email === email
-          ? {
-              ...account,
-              links: account.links.map((link, i) =>
-                i === index ? { platform, link: url } : link,
-              ),
-            }
+          ? { ...account, firstName, lastName, profileEmail, profilePicture }
           : account,
       ),
     );
@@ -94,10 +97,11 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
       value={{
         accounts,
         currentAccount,
+        canPreview,
         addAccount,
         login,
-        addLink,
-        updateLink,
+        saveLinks,
+        updateProfileDetails,
       }}
     >
       {children}

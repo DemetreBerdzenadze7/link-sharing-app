@@ -13,6 +13,7 @@ type TCreateAccountInputs = ICreateAccountInputs;
 
 interface IPlatform {
   name: string;
+  domain: string;
   icon: string;
   color: string;
   placeholder: string;
@@ -27,6 +28,7 @@ interface IProfileInputs {
   firstName: string;
   lastName: string;
   email?: string;
+  profilePicture: string;
 }
 
 type TProfileInputs = IProfileInputs;
@@ -36,11 +38,18 @@ interface IAccountLink {
   link: string;
 }
 
+interface ILinksInputs {
+  links: IAccountLink[];
+}
+
+type TLinksInputs = ILinksInputs;
+
 interface User {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
+  profileEmail: string;
   profilePicture: string;
   links: IAccountLink[];
 }

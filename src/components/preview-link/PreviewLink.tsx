@@ -3,22 +3,23 @@ import PlatformIcon from "../platform-icon/PlatformIcon";
 
 interface PreviewLinkProps {
   platform: string;
+  large?: boolean;
+  href?: string;
 }
 
-const PreviewLink = ({ platform }: PreviewLinkProps) => {
+const PreviewLink = ({ platform, large = false, href }: PreviewLinkProps) => {
   const { name, icon, color } = getPlatform(platform);
   const isLight = name === "Frontend Mentor";
 
-  return (
-    <li
-      className={`flex h-11 items-center gap-2 rounded-lg px-4 text-xs leading-normal ${
-        isLight ? "border border-borders text-dark-grey" : "text-white"
-      }`}
-      style={{ backgroundColor: color }}
-    >
+  const className = `flex items-center gap-2 rounded-lg px-4 leading-normal ${
+    large ? "h-14 text-base" : "h-11 text-xs"
+  } ${isLight ? "border border-borders text-dark-grey" : "text-white"}`;
+
+  const content = (
+    <>
       <PlatformIcon
         icon={icon}
-        className={isLight ? "text-[#3f54a3]" : ""}
+        className={`${large ? "size-5" : ""} ${isLight ? "text-[#3f54a3]" : ""}`}
       />
       <span className="flex-1">{name}</span>
       <span
@@ -26,6 +27,26 @@ const PreviewLink = ({ platform }: PreviewLinkProps) => {
           isLight ? "text-grey" : ""
         }`}
       />
+    </>
+  );
+
+  return (
+    <li>
+      {href ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className={`${className} hover:opacity-90`}
+          style={{ backgroundColor: color }}
+        >
+          {content}
+        </a>
+      ) : (
+        <div className={className} style={{ backgroundColor: color }}>
+          {content}
+        </div>
+      )}
     </li>
   );
 };

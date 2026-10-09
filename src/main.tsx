@@ -8,6 +8,7 @@ import CreateAccount from "./pages/CreateAccount";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
 import ProfileDetails from "./pages/ProfileDetails";
+import Preview from "./pages/Preview";
 import { AccountProvider } from "./context/Accounts";
 
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/registration",
     Component: CreateAccount,
+  },
+  {
+    path: "/preview",
+    Component: Preview,
   },
   {
     Component: Layout,

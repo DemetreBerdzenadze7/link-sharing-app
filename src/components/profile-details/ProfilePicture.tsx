@@ -1,15 +1,19 @@
 import type { ChangeEvent } from "react";
 
 interface ProfilePictureProps {
-  image: string | null;
+  image: string;
   onImageChange: (file: File) => void;
+  error?: string;
 }
 
-const ProfilePicture = ({ image, onImageChange }: ProfilePictureProps) => {
+const ProfilePicture = ({
+  image,
+  onImageChange,
+  error,
+}: ProfilePictureProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) onImageChange(file);
-    // reset so the same file can be picked again
     e.target.value = "";
   };
 
@@ -41,9 +45,12 @@ const ProfilePicture = ({ image, onImageChange }: ProfilePictureProps) => {
           />
         </label>
 
-        <p className="text-xs leading-normal text-grey">
-          Image must be below 1024x1024px. Use PNG or JPG format.
-        </p>
+        <div className="flex flex-col gap-1">
+          <p className="text-xs leading-normal text-grey">
+            Image must be below 1024x1024px. Use PNG or JPG format.
+          </p>
+          {error && <p className="text-xs leading-normal text-red">{error}</p>}
+        </div>
       </div>
     </div>
   );

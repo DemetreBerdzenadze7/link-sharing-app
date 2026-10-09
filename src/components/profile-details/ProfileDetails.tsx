@@ -1,9 +1,10 @@
-import { useFormContext } from "react-hook-form";
+import { useFormContext, type SubmitHandler } from "react-hook-form";
 import ProfilePicture from "./ProfilePicture";
 import ProfileField from "./ProfileField";
+import { useAccount } from "../../context/Accounts";
 
 interface ProfileDetailsProps {
-  image: string | null;
+  image: string;
   onImageChange: (file: File) => void;
   onSave: () => void;
 }
@@ -13,16 +14,30 @@ const ProfileDetails = ({
   onImageChange,
   onSave,
 }: ProfileDetailsProps) => {
+  const { currentAccount, updateProfileDetails } = useAccount();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useFormContext<TProfileInputs>();
 
+  const saveProfile: SubmitHandler<TProfileInputs> = (data) => {
+    if (!currentAccount) return;
+
+    updateProfileDetails(
+      currentAccount.email,
+      data.firstName,
+      data.lastName,
+      data.email ?? "",
+      data.profilePicture,
+    );
+    onSave();
+  };
+
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(onSave)}
+      onSubmit={handleSubmit(saveProfile)}
       className="flex flex-1 flex-col rounded-xl bg-white"
     >
       <div className="flex flex-1 flex-col gap-10 p-6 md:p-10">
@@ -36,7 +51,11 @@ const ProfileDetails = ({
         </div>
 
         <div className="flex flex-col gap-6">
-          <ProfilePicture image={image} onImageChange={onImageChange} />
+          <ProfilePicture
+            image={image}
+            onImageChange={onImageChange}
+            error={errors.profilePicture?.message}
+          />
 
           <div className="flex flex-col gap-3 rounded-xl bg-light-grey p-5">
             <ProfileField
