@@ -22,3 +22,11 @@ interface ILink {
   id: number;
   platform: string;
 }
+
+interface IProfileInputs {
+  firstName: string;
+  lastName: string;
+  email?: string;
+}
+
+type TProfileInputs = IProfileInputs;
