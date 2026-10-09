@@ -3,16 +3,21 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, redirect } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import Registration from "./components/registration-from/Registration";
+import Login from "./components/login-form/Login";
+import CreateAccount from "./components/registration-form/CreateAccount";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    loader: () => redirect("/registration"),
+    loader: () => redirect("/login"),
+  },
+  {
+    path: "/login",
+    Component: Login,
   },
   {
     path: "/registration",
-    Component: Registration,
+    Component: CreateAccount,
   },
 ]);
 

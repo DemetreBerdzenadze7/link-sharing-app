@@ -4,3 +4,9 @@ interface IInputs {
 }
 
 type TInputs = IInputs;
+
+interface ICreateAccountInputs extends IInputs {
+  confirmPassword: string;
+}
+
+type TCreateAccountInputs = ICreateAccountInputs;

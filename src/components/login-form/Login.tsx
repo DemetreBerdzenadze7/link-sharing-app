@@ -2,6 +2,7 @@ import InputField from "../input-field/InputField";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Link } from "react-router";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -22,7 +23,7 @@ const schema = yup
   })
   .required();
 
-const Registration = () => {
+const Login = () => {
   const {
     register,
     handleSubmit,
@@ -79,9 +80,9 @@ const Registration = () => {
 
           <p className="flex flex-col text-center text-base leading-normal text-grey md:flex-row md:justify-center md:gap-1">
             <span>Don’t have an account?</span>
-            <a href="#" className="text-purple">
+            <Link to="/registration" className="text-purple">
               Create account
-            </a>
+            </Link>
           </p>
         </form>
       </div>
@@ -89,4 +90,4 @@ const Registration = () => {
   );
 };
 
-export default Registration;
+export default Login;

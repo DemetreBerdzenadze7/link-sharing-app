@@ -18,7 +18,7 @@ const InputField = ({
     <div className="flex w-full flex-col gap-1">
       <label
         htmlFor={id}
-        className={`text-xs leading-normal ${error ? "text-red" : "text-dark-grey"}`}
+        className="text-xs leading-normal text-dark-grey"
       >
         {label}
       </label>
