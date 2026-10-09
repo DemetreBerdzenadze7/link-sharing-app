@@ -3,8 +3,10 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, redirect } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import Login from "./components/login-form/Login";
-import CreateAccount from "./components/registration-form/CreateAccount";
+import Login from "./pages/Login";
+import CreateAccount from "./pages/CreateAccount";
+import Layout from "./layout/Layout";
+import Home from "./pages/Home";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,15 @@ const router = createBrowserRouter([
   {
     path: "/registration",
     Component: CreateAccount,
+  },
+  {
+    Component: Layout,
+    children: [
+      {
+        path: "/home",
+        Component: Home,
+      },
+    ],
   },
 ]);
 

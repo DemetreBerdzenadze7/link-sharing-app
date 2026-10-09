@@ -1,21 +1,25 @@
 import InputField from "../input-field/InputField";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { createAccountSchema } from "../../schemas/auth";
 
 const CreateAccount = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<TCreateAccountInputs>({
     resolver: yupResolver(createAccountSchema),
   });
-  const onSubmit: SubmitHandler<TCreateAccountInputs> = (data) =>
-    console.log(data);
+  const onSubmit: SubmitHandler<TCreateAccountInputs> = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    navigate("/login", { state: { accountCreated: true } });
+  };
+
   return (
-    <div className="flex min-h-screen flex-col gap-16 bg-white p-8 md:items-center md:justify-center md:gap-12.75 md:bg-light-grey md:p-6">
+    <div className="flex min-h-screen flex-col gap-16 bg-white md:items-center md:justify-center md:gap-12.75 md:bg-light-grey">
       <img
         src="/images/logo-devlinks-large.svg"
         alt="devlinks"
@@ -67,9 +71,13 @@ const CreateAccount = () => {
 
           <button
             type="submit"
-            className="w-full cursor-pointer rounded-lg bg-purple px-6.75 py-2.75 text-base leading-normal font-semibold text-white hover:bg-purple-hover hover:shadow-[0_0_32px_0_rgba(99,60,255,0.25)]"
+            disabled={isSubmitting}
+            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-purple px-6.75 py-2.75 text-base leading-normal font-semibold text-white hover:bg-purple-hover hover:shadow-[0_0_32px_0_rgba(99,60,255,0.25)] disabled:cursor-not-allowed disabled:bg-purple-hover disabled:shadow-none"
           >
-            Create new account
+            {isSubmitting && (
+              <span className="size-5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+            )}
+            {isSubmitting ? "Creating account..." : "Create new account"}
           </button>
 
           <p className="flex flex-col text-center text-base leading-normal text-grey md:flex-row md:justify-center md:gap-1">
